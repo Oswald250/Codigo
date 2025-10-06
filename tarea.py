@@ -10,21 +10,25 @@ Eq = np.array([
     [0,   0, 1, 0, 0, 0, 1]
 ])
 
-b = np.array([6, 8, 1,2])  
+b = np.array([6, 9, 1,2])  
 
 def armarTablero(f,A,B): return np.hstack((np.vstack((f,A)), np.insert(B,0,0)[:,None]))
 
 def maximizar(t):
 
     while np.any(t[0, :-1] < 0):
-        cp = np.argmin(t[0, :-1])
-        r = t[1:, -1] / t[1:, cp]
-        r[r <= 0] = np.inf
-        fp = np.argmin(r) + 1
-        t[fp] /= t[fp, cp]
-        for i in range(len(t)):
-            if i != fp:
-                t[i] -= t [i, cp] * t[fp]
+        while np.any(t[0, :-1] <0 ):
+            col = np.argmin(t[0, :-1])
+            razones = t[1:, -1]/ t[1:, col]
+            razones[razones <= 0] = np.inf
+            fila = np.argmin(razones) + 1
+            
+            t[fila] = t[fila] / t [fila, col] *  t[fila]
+
+            for i in range(len(t)):
+                if i != fila:
+    
+                 t[i] = t[i] - t[i,col] * t[fila]
 
     return t
 

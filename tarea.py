@@ -40,8 +40,7 @@ while True:
        if i != row:
             factor = tableau[i,col]
             tableau[i, :] -= factor * tableau[row, :]
-
-            basis[row] = col
+    basis[row] = col
 
     x = np.zeros(n + m)
     x[basis] = tableau[:m, -1]
@@ -51,5 +50,4 @@ while True:
     for i in range(n + m):
      print(f"x{i+1} = {x[i]}")
     print("Valor Maximo:", tableau[-1, -1])
-
 

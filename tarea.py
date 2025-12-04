@@ -1,34 +1,52 @@
 import numpy as np
 
-z = np.array([1.0, -4, -2, 0, 0, 0, 0])
+n = int(input("Numero de variables; "))
+m = int(input("Numero de restricciones; "))
 
-Eq = np.array([
+c = np.array([float(input(f"c{i+1}: ")) for i in range(n)])
+a = []
+b = []
+for i in range(m):
+    fila = [float(input(f"a{i+1},{j+1}:")) for j in range(n)]
+    a.append(fila)
+    b.append(float(input(f"b{i+1}: ")))
 
-    [0.0, 1, 2, 1, 0, 0, 0],
-    [0,   2, 1, 0, 1, 0, 0],
-    [0,  -1, 1, 0, 0, 1, 0],
-    [0,   0, 1, 0, 0, 0, 1]
-])
+a = np.array(a)
+b = np.array(b)
 
-b = np.array([6, 8, 1,2])  
+tableau = np.zeros((m + 1, n + m + 1))
+tableau[:m, :n] = a
+tableau[:m, n:n + m] = np.eye(m)
+tableau[:m, -1] = b
+tableau[-1, :n] = -c
+basis = list(range(n,n + m))
 
-def armarTablero(f,A,B): return np.hstack((np.vstack((f,A)), np.insert(B,0,0)[:,None]))
+while True:
 
-def maximizar(t):
+    if all(tableau[-1, :-1] >= 0):
+        break
+    col = np.argmin(tableau[-1, :-1])
+    if all(tableau[:m, col] <= 0):
+     print("Problema ilimitado")
+     exit()
+    
+    raritos = [tableau[i, -1] / tableau[i, col] 
+            if tableau[i, col] > 0 else np.inf for i in range(m)]
+    row = np.argmin(raritos)
+    pivot = tableau[row, col]
+    tableau[row, :] /= pivot
 
-    while np.any(t[0, :-1] < 0):
-        cp = np.argmin(t[0, :-1])
-        r = t[1:, -1] / t[1:, cp]
-        r[r <= 0] = np.inf
-        fp = np.argmin(r) + 1
-        t[fp] /= t[fp, cp]
-        for i in range(len(t)):
-            if i != fp:
-                t[i] -= t [i, cp] * t[fp]
+    for i in range(m + 1):
+       if i != row:
+            tableau[i, :] -= tableau[i, col] * tableau[row, :]
 
-    return t
+            basis[row] = col
 
-tablero = armarTablero(z, Eq, b)
-res = maximizar(tablero)
-print(res)
-print("Z =", res[0, -1])
+    x = np.zeros(n + m)
+    x[basis] = tableau[:m, -1]
+
+
+    print("\n === Resultado final ===")        
+    print("solucion optima:", x[:n])
+    print("Valor Maximo:", tableau[-1, -1])
+

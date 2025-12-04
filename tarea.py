@@ -49,8 +49,7 @@ while True:
 
     print("\n === Resultado final ===")        
     for i in range(n + m):
-        print(f"x{i+1} = {x[i]}")
-
+     print(f"x{i+1} = {x[i]}")
     print("Valor Maximo:", tableau[-1, -1])
 
 

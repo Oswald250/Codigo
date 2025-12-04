@@ -38,7 +38,8 @@ while True:
 
     for i in range(m + 1):
        if i != row:
-            tableau[i, :] -= tableau[i, col] * tableau[row, :]
+            factor = tableau[i,col]
+            tableau[i, :] -= factor * tableau[row, :]
 
             basis[row] = col
 
@@ -47,7 +48,9 @@ while True:
 
 
     print("\n === Resultado final ===")        
-    print("solucion optima:", x[:n])
+    for i in range(n + m):
+        print(f"x{i+1} = {x[i]}")
+
     print("Valor Maximo:", tableau[-1, -1])
 
 

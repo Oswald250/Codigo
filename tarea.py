@@ -50,3 +50,4 @@ while True:
     print("solucion optima:", x[:n])
     print("Valor Maximo:", tableau[-1, -1])
 
+
